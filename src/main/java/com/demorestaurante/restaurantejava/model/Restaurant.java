@@ -1,4 +1,5 @@
 package com.demorestaurante.restaurantejava.model;
+import com.demorestaurante.restaurantejava.model.enums.FootType;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
@@ -18,6 +19,9 @@ public class Restaurant {
     private Boolean active;
     private Integer numberEmployee;
     private LocalDate startDate = LocalDate.now();
+
+    @Enumerated(EnumType.STRING)
+    private FootType footType;
 
     //Asociaciones
     //Constructor
@@ -57,6 +61,14 @@ public class Restaurant {
         this.startDate = startDate;
     }
 
+    public FootType getFootType() {
+        return footType;
+    }
+
+    public void setFootType(FootType footType) {
+        this.footType = footType;
+    }
+
     @Override
     public String toString() {
         return "Restaurant{" +
@@ -66,6 +78,7 @@ public class Restaurant {
                 ", active=" + active +
                 ", numberEmployee=" + numberEmployee +
                 ", startDate=" + startDate +
+                ", footType=" + footType +
                 '}';
     }
 }
