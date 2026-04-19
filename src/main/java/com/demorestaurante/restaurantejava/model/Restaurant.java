@@ -24,6 +24,7 @@ public class Restaurant {
     private FootType footType;
 
     //Asociaciones
+
     //Constructor
     public Restaurant(){}
 
@@ -35,8 +36,8 @@ public class Restaurant {
         this.numberEmployee = numberEmployee;
         this.startDate = startDate;
     }
-    //Getter y Setter
 
+    //Getter y Setter
     public void setId(Long id) {
         this.id = id;
     }
