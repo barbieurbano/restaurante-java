@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle de restaurante</title>
+</head>
+<body>
+<h1 th:text="${restaurante.name}"></h1>
+<p th:text="${restaurante.averagePrice != null ? restaurante.averagePrice + 'EUR' : 'Sin precio'}"></p>
+
+<p th:if="${restaurante.numberEmployees != null}" th:text="${restaurante.numberEmployees} + 'empleados'}"></p>
+<p th:unless="${restaurante.numberEmployees != null}">Sin empleados</p>
+
+<p th:if="${restaurante.active}" style="color:green">Abierto</p>
+<p th:unless="${restaurante.active}" style="color:red">Cerrado</p>
+
+<!--RESTO de atributos del restaurant-->
+<!--Listado de platos-->
+<h2>Carta de platos</h2>
+<p th:text="${dishes.size()} + 'platos'"></p>
+<!--AGRUPAR los platos por tipo de platos: Entrante, principal, postre-->
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Descripcion</th>
+            <th>Precio (EUR)</th>
+            <th>Tipo</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="dish : ${dishes}">
+            <td th:text="${dish.id}"></td>
+            <td th:text="${dish.name}"></td>
+            <td th:text="${dish.id}"></td>
+            <td th:text="${dish.id}"></td>
+            <td th:text="${dish.id}"></td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>Opiniones de nuestro clientes</h2>
+<p th:if="${reviews.isEmpty()}">Nadie ha comentado todavia, se el primero en escribir una opinion</p>
+
+<ul th:unless="${reviews.isEmpty()}">
+    <li th:each="review : ${reviews}">
+        <p th:text="${review.title}"></p>
+        <p th:text="${review.description}"></p>
+        <p th:text="${'Valoracion: ' + review.rating + '/5 estrellas'}"></p>
+        <p th:text="${'Fecha: ' + review.creationDate}"></p>
+    </li>
+</ul>
+</body>
+</html>

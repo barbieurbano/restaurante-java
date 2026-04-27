@@ -38,6 +38,27 @@ public class Restaurant {
     }
 
     //Getter y Setter
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Double getAveragePrice() {
+        return averagePrice;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public Integer getNumberEmployee() {
+        return numberEmployee;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

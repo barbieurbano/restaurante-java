@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle plato</title>
+</head>
+<body>
+<h1 th:text="'Plato' + ${dish.id}"></h1>
+
+<p th:text="'Nombre: ' + ${dish.name}"></p>
+
+<p th:text="'Precio: ' + ${dish.price != null ? dish.price + '(EUR)' : 'Sin precio'}"></p>
+
+<p th:text="'Descripcion: ' + ${dish.description != null ? dish.description : 'Sin descripcion'}"></p>
+
+<!-- SWICH sobre enum tipo de plato DishType-->
+<p th:switch="${dish.dishType}">
+    <span th:case="${T(com.demorestaurante.restaurantejava.model.enums.DishType.STARTER)}">Entrantes</span>
+    <span th:case="${T(com.demorestaurante.restaurantejava.model.enums.DishType.MAIN)}">Principales</span>
+    <span th:case="${T(com.demorestaurante.restaurantejava.model.enums.DishType.DESSERT)}">Postres</span>
+    <span th:case="*">No definido.</span>
+</p>
+<p th:if="${dish.restaurant != null}">
+    <!--Desde aqui se puede volver a la pantalla del restaurante-->
+    <a th:href="@{/restaurants/{id}(id=${dish.restaurant.id})}" th:text="${dish.restaurant.name}"></a>
+</p>
+
+</body>
+</html>

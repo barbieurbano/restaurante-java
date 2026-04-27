@@ -1,5 +1,14 @@
 package com.demorestaurante.restaurantejava.model.enums;
 
 public enum DishType {
-    STARTER, MAIN, DESSERT
+    STARTER("Entrantes"), MAIN("Principales"), DESSERT("Postres");
+    private final String label;
+
+    DishType(String label) {
+        this.label = label;
+    }
+
+    public String getLabel() {
+        return label;
+    }
 }

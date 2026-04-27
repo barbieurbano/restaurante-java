@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Restaurantes Listado</title>
+</head>
+<body>
+<h1 th:text="${titple}">Restaurantes Listado</h1>
+
+<p th:text="|${#lists.size(restaurants)} resultados|"></p>
+<p th:text="|${restaurants.size()} resultados|"></p>
+<p th:text="|${numRestaurants} resultados|"></p>
+
+<ul>
+    <li th:each="restaurant : ${restaurants}">
+        <span th:text="${restaurant.name}"></span>
+        <span th:text="${restaurant.averagePrice}"></span>
+        <a th:href="@{/restaurants/{id}(id=${restaurant.id})}">Ver restaurante</a>
+    </li>
+</ul>
+<a th:href="@{/restaurants/create}">Crear restaurante</a>
+</body>
+</html>
