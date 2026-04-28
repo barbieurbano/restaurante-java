@@ -33,6 +33,10 @@ public class Review {
     @ManyToOne
     private Restaurant restaurant;
 
+    @ToString.Exclude
+    @ManyToOne
+    private Dish dish;
+
     //@ManyToOne
     //private User user;
 }

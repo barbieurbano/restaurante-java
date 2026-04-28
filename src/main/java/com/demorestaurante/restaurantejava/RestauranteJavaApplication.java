@@ -22,6 +22,9 @@ public class RestauranteJavaApplication {
         //.title("Me sirvieron la sopa sin mosca");
         //.rating(1);
         //.build();
+
+        //Review r
+
         //reviewRepository.saveAll(List.of(review1, review2, review3));
     }
 }

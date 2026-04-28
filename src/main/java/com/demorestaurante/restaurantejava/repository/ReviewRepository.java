@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface ReviewRepository {
     List<Review> findByRestaurant_IdOrderByCreationDateDesc(Long id);
+    List<Review> findByDish_IdOrderByCreationDateDesc(Long id);
 }
