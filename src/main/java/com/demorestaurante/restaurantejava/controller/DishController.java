@@ -18,7 +18,14 @@ import java.util.Optional;
 public class DishController {
 
     private final DishRepository dishRepository;
-    private final ReviewRepository reviewRepository;
+    //private final ReviewRepository reviewRepository;
+
+    @GetMapping("dishes")
+    public String listDishes(Model model){
+        List<Dish> dishes = dishRepository.findAll();
+        model.addAttribute("dishes", dishes);
+        return "dishes/dish-list";
+    }
 
 
     @GetMapping("dishes/{id}")
@@ -30,8 +37,8 @@ public class DishController {
             Dish dish = dishOptional.get();
             model.addAttribute("dish", dish);
             //traer reviews de este plato y cagar en model
-            List<Review> reviews = reviewRepository.findByDish_IdOrderByCreationDateDesc(dish.getId());
-            model.addAttribute("reviews", reviews); //sin esto no podriamos acceder desde el HTML (vista)
+            //List<Review> reviews = reviewRepository.findByDish_IdOrderByCreationDateDesc(dish.getId());
+            //model.addAttribute("reviews", reviews); //sin esto no podriamos acceder desde el HTML (vista)
 
 
             return "dishes/dish-detail";
