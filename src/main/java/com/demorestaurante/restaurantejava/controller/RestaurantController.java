@@ -3,6 +3,7 @@ package com.demorestaurante.restaurantejava.controller;
 import com.demorestaurante.restaurantejava.model.Dish;
 import com.demorestaurante.restaurantejava.model.Restaurant;
 import com.demorestaurante.restaurantejava.model.Review;
+import com.demorestaurante.restaurantejava.model.enums.FootType;
 import com.demorestaurante.restaurantejava.repository.DishRepository;
 import com.demorestaurante.restaurantejava.repository.RestaurantRepository;
 import com.demorestaurante.restaurantejava.repository.ReviewRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,9 +30,28 @@ public class RestaurantController {
 //    }
 
 
+//    @GetMapping("restaurants") //Esta ruta se ve desde el navegador
+//    public String restaurantList(Model model) {
+//        //List<Restaurant> restaurants = restaurantRepository.findAll();
+//        List<Restaurant> restaurants = restaurantRepository.findByActiveTrue();
+//        model.addAttribute("restaurants", restaurants);
+//        model.addAttribute("numRestaurants", restaurants.size());
+//        model.addAttribute("title", "Lista de restaurantes");
+//
+//        return "restaurants/restaurant-list"; //Esto es como se llama el HTML -> Vista (lo que se config para que ve el usuario)
+//    }
+
+    //Estamos filtrando con el @RequestParam por tipo de comida
     @GetMapping("restaurants") //Esta ruta se ve desde el navegador
-    public String restaurantList(Model model) {
-        List<Restaurant> restaurants = restaurantRepository.findAll();
+    public String restaurantList(
+            Model model,
+            @RequestParam(required = false)FootType foodType,
+            @RequestParam(required = false)Double price,
+            @RequestParam(required = false)String title
+
+    ) {
+        //List<Restaurant> restaurants = restaurantRepository.findAll();
+        List<Restaurant> restaurants = restaurantRepository.findActiveFiltering(foodType, price, title);
         model.addAttribute("restaurants", restaurants);
         model.addAttribute("numRestaurants", restaurants.size());
         model.addAttribute("title", "Lista de restaurantes");
@@ -38,10 +59,12 @@ public class RestaurantController {
         return "restaurants/restaurant-list"; //Esto es como se llama el HTML -> Vista (lo que se config para que ve el usuario)
     }
 
+
+
     @GetMapping("restaurants/{id}")
     public String restaurantDetail(@PathVariable Long id, Model model){
         //usamos el optional para evitar nullException si no tiene ese id en la BD
-        Optional<Restaurant> restaurantOptional = restaurantRepository.findById(id);
+        Optional<Restaurant> restaurantOptional = restaurantRepository.findByIdAndActiveTrue(id);
 
         if(restaurantOptional.isPresent()){
            //si esxiste en BD
@@ -62,4 +85,20 @@ public class RestaurantController {
         }
     }
 
+    @GetMapping("restaurants/deactivate/{id}")
+    public String restaurantDeactivate(@PathVariable Long id, Model model){
+        //findById
+
+        Optional<Restaurant> restaurantOptional = restaurantRepository.findById(id);
+        //active false
+        if (restaurantOptional.isPresent()){
+            Restaurant restaurant = restaurantOptional.get();
+            restaurant.setActive(false);
+             //En el borrado de la review con flush. ver despues
+            //save
+            restaurantRepository.save(restaurant);
+        }
+        //redirect
+        return "redirect:/restaurants";
+    }
 }
