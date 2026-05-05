@@ -28,6 +28,12 @@ public class Restaurant {
     //Constructor
     public Restaurant(){}
 
+    public Restaurant(String name, Double averagePrice, Integer numberEmployees) {
+        this.name = name;
+        this.averagePrice = averagePrice;
+        this.numberEmployee = numberEmployees;
+    }
+
     public Restaurant(Long id, String name, Double averagePrice, Boolean active, Integer numberEmployee, LocalDate startDate) {
         this.id = id;
         this.name = name;
@@ -36,6 +42,7 @@ public class Restaurant {
         this.numberEmployee = numberEmployee;
         this.startDate = startDate;
     }
+
 
     //Getter y Setter
 

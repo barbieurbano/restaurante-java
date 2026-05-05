@@ -66,11 +66,11 @@ public class Employee {
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
     }
+
     //Constructores
     public Employee(){}
 
-    public Employee(Long id, String firstName, String lastName, Integer age, String dni) {
-        this.id = id;
+    public Employee(String firstName, String lastName, Integer age, String dni) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
