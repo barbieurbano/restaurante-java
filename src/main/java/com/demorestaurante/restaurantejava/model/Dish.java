@@ -7,7 +7,8 @@ import jakarta.persistence.*;
 @Table(name = "Platos")
 public class Dish {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
     private String name;
     private String description;
@@ -21,13 +22,13 @@ public class Dish {
 
     public Dish() {}
 
-    public Dish(Long id, String name, String description, Double price, Restaurant restaurant, DishType dishType) {
+    public Dish(Long id, String name, String description, Double price, DishType dishType, Restaurant restaurant) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
-        this.restaurant = restaurant;
         this.dishType = dishType;
+        this.restaurant = restaurant;
     }
 
     public Long getId() {

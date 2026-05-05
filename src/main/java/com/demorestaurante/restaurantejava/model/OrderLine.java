@@ -17,7 +17,7 @@ public class OrderLine {
 
     public OrderLine(){}
 
-    public OrderLine(Integer quantity, Dish dish, Order order) {
+    public OrderLine(Integer quantity, Order order, Dish dish) {
         this.quantity = quantity;
         this.dish = dish;
         this.order = order;

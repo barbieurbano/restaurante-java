@@ -9,20 +9,71 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="mb-0" th:text="${title}">Restaurantes</h1>
         <span class="badge bg-secondary fs-6" th:text="|${numRestaurants} resultados|">0 resultados</span>
+
+    </div>
+    <a th:href="@{/restaurants/new}" class="btn btn-primary btn-sm"> <i class="fa-solid fa-plus"></i>Crear restaurante</a>
+
+    <div class="mb-5">
+        <h5>Filtros</h5>
+        <a th:href="@{/restaurants}" class="btn btn-sm btn-primary"></a>
+        <a th:href="@{/restaurants(foodType='SPANISH')}" class="btn btn-sm btn-secondary">Comida spanish</a>
+        <a th:href="@{/restaurants(foodType='JAPANESE')}" class="btn btn-sm btn-secondary">Comida japonesa</a>
+
+<!--        Para esto tendremos que ajustar el controlador y la query-->
+        <a th:href="@{/restaurants(price=15)}" class="btn btn-sm btn-success">Hasta 15 $</a>
+        <a th:href="@{/restaurants(price=30)}" class="btn btn-sm btn-success">Hasta 30 $</a>
+        <a th:href="@{/restaurants(title='pizza')}" class="btn btn-sm btn-warning">Pizza</a>
+        <a th:href="@{/restaurants(title='burger')}" class="btn btn-sm btn-warning">Burger</a>
+        <a th:href="@{/restaurants(title='paella')}" class="btn btn-sm btn-warning">Paella</a>
     </div>
 
+    <div class="mb-3"></div>
+    <h5>Busqueda avanzada</h5>
+<!--    Los formularios (son inputs, cada input tiene un label(indica el campo: ) (el placeholder es el textosombreado antes de escribir))
+        apuntan a un controlador, GET por la URL, POST en el body-->
+    <form th:actino="@{/restaurants}" method="get" class="row aling.itms-end">
+        <div class="col-auto"></div>
+        <label class="form-label">Titulo (Keyword) </label>
+<!--        El name es el nombre del parametro, falta value para que sea el input donde, param es para poder enviar los
+            parametros por URL-->
+        <input type="text" name="title" class="form-control" placeholder="Busca por titulo.." th:value="${param.title}">
+
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary btn-sm"> <i class="fa-solid fa-mgnifying-glass"></i>Buscar</button>
+            <a th:href="@{/restaurants}" class="btn btn-info btn-sm"> <i class="fa-solid fa broom"></i>Limpiar filtros</a>
+        </div>
+<!--        Filtro por precio, el step es por si quiere filtrar por decimales-->
+        <div class="col-auto">
+            <label class="form-label form-label-sm">Precio max</label>
+            <input type="number" min="10" name="price" class="form-control form-control-sm" th:value="${param.price}">
+
+        </div>
+<!--        Filtro por foodType debe tener un selector, siempre va acompanado de option, de las opciones que puede elegir-->
+        <div class="col-auto">
+            <label class="form-label form"></label>>
+            <select name="foodType" class="form-select form-select-sm"></select>
+            <option value="" th:selected="${param.foodType == null}">Todas</option>
+            <option value="SPANISH" th:selected="${param.foodType != null and param.foodType[0] == 'SPANISH'}">Espaniola</option>
+            <option value="JAPANESE" th:selectedd="${param.foodType != null and param.foodType[0] == 'JAPANESE'}">Japonesa</option>
+
+        </div>
+
+    </form>
+
+
+
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
-        <div class="col" th:each="restaurant : ${restaurants}">
+        <div class="col" th:each="movie : ${movies}">
             <div class="card card-restaurant h-100 shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">
                         <i class="fa-solid fa-store text-primary me-2"></i>
-                        <span th:text="${restaurant.name}">Nombre</span>
+                        <span th:text="${movie.title}">Pelicula</span>
                     </h5>
                     <p class="card-text">
                         <span class="badge bg-success">
                             <i class="fa-solid fa-euro-sign me-1"></i>
-                            <span th:text="${restaurant.averagePrice}">0</span>
+                            <span th:text="${}">0</span>
                         </span>
                     </p>
                 </div>
@@ -31,16 +82,17 @@
                        class="btn btn-outline-primary btn-sm w-100">
                         <i class="fa-regular fa-eye me-1"></i> Ver restaurante
                     </a>
+<!--                    Boton desactivar restaurante que cambia active a false y hace redirect a list-->
+                    <a th:href="@{/restaurants/deactivate/{id}(id=${restaurant.id})}"
+                       class="btn btn-warning btn-sm w-100 mt-2">
+                        <i class="fa-regular fa-ban me-1"></i> Dar de baja
+                    </a>
+
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="mt-4">
-        <a th:href="@{/restaurants/create}" class="btn btn-success">
-            <i class="fa-solid fa-plus me-1"></i> Crear restaurante
-        </a>
-    </div>
 </main>
 
 <footer th:replace="~{layout/footer :: footer}"></footer>

@@ -101,4 +101,15 @@ public class RestaurantController {
         //redirect
         return "redirect:/restaurants";
     }
+    //Ruta para entrar al formulario de restaurante
+    @GetMapping("restaurant/new")
+    public String newRestaurants(Model model){
+        return "restaurants/restaurant-form";
+    }
+
+    @GetMapping("restaurant/{id}/edit")
+    public String restauranEdit(){
+        return "";
+    }
+
 }

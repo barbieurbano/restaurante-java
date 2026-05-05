@@ -262,7 +262,6 @@ public class RestauranteJavaApplication {
 
         // CREAR PLATOS Y GUARDARLOS
         Dish plato1 = new Dish(null, "Ensalada", "de puñetazos", 5.0, DishType.STARTER, restaurantSpain);
-        Dish plato1 = new Dish(null, "Ensalada", "de puñetazos", 5.0, DishType.STARTER,);
         Dish plato2 = new Dish(null, "Lentejas", "con chorizo", 8.0, DishType.MAIN, restaurantSpain);
         Dish plato3 = new Dish(null, "Tarta de queso", null, 7.50, DishType.DESSERT, restaurantSpain);
         Dish plato4 = new Dish(null, "Champán", null, 60.0, DishType.DESSERT, restaurantSpain);
