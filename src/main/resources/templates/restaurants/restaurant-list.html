@@ -31,7 +31,7 @@
     <h5>Busqueda avanzada</h5>
 <!--    Los formularios (son inputs, cada input tiene un label(indica el campo: ) (el placeholder es el textosombreado antes de escribir))
         apuntan a un controlador, GET por la URL, POST en el body-->
-    <form th:actino="@{/restaurants}" method="get" class="row aling.itms-end">
+    <form th:action="@{/restaurants}" method="get" class="row aling.itms-end">
         <div class="col-auto"></div>
         <label class="form-label">Titulo (Keyword) </label>
 <!--        El name es el nombre del parametro, falta value para que sea el input donde, param es para poder enviar los
@@ -51,10 +51,11 @@
 <!--        Filtro por foodType debe tener un selector, siempre va acompanado de option, de las opciones que puede elegir-->
         <div class="col-auto">
             <label class="form-label form"></label>>
-            <select name="foodType" class="form-select form-select-sm"></select>
-            <option value="" th:selected="${param.foodType == null}">Todas</option>
-            <option value="SPANISH" th:selected="${param.foodType != null and param.foodType[0] == 'SPANISH'}">Espaniola</option>
-            <option value="JAPANESE" th:selectedd="${param.foodType != null and param.foodType[0] == 'JAPANESE'}">Japonesa</option>
+            <select name="foodType" class="form-select form-select-sm">
+                <option value="" th:selected="${param.foodType == null}">Todas</option>
+                <option value="SPANISH" th:selected="${param.foodType != null and param.foodType[0] == 'SPANISH'}">Española</option>
+                <option value="JAPANESE" th:selected="${param.foodType != null and param.foodType[0] == 'JAPANESE'}">Japonesa</option>
+            </select>
 
         </div>
 
@@ -63,17 +64,17 @@
 
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
-        <div class="col" th:each="movie : ${movies}">
+        <div class="col" th:each="restaurant : ${restaurants}">
             <div class="card card-restaurant h-100 shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">
                         <i class="fa-solid fa-store text-primary me-2"></i>
-                        <span th:text="${movie.title}">Pelicula</span>
+                        <span th:text="${restaurant.name}">Restaurante</span>
                     </h5>
                     <p class="card-text">
                         <span class="badge bg-success">
                             <i class="fa-solid fa-euro-sign me-1"></i>
-                            <span th:text="${}">0</span>
+                            <span th:text="${restaurant.averagePrice}">0</span>
                         </span>
                     </p>
                 </div>
