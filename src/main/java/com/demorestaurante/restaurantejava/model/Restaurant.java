@@ -1,5 +1,5 @@
 package com.demorestaurante.restaurantejava.model;
-import com.demorestaurante.restaurantejava.model.enums.FootType;
+import com.demorestaurante.restaurantejava.model.enums.FoodType;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
@@ -16,12 +16,13 @@ public class Restaurant {
     private Double averagePrice;
 
     @Column(columnDefinition = "BOOLEAN DEFAULT true")
-    private Boolean active;
-    private Integer numberEmployee;
+    private Boolean active = true;
+    private Integer numberEmployees;
+    //@DataTimeFormat(iso = DateTiimeFormat.ISO.DATE )
     private LocalDate startDate = LocalDate.now();
 
     @Enumerated(EnumType.STRING)
-    private FootType footType;
+    private FoodType foodType;
 
     //Asociaciones
 
@@ -31,18 +32,8 @@ public class Restaurant {
     public Restaurant(String name, Double averagePrice, Integer numberEmployees) {
         this.name = name;
         this.averagePrice = averagePrice;
-        this.numberEmployee = numberEmployees;
+        this.numberEmployees = numberEmployees;
     }
-
-    public Restaurant(Long id, String name, Double averagePrice, Boolean active, Integer numberEmployee, LocalDate startDate) {
-        this.id = id;
-        this.name = name;
-        this.averagePrice = averagePrice;
-        this.active = active;
-        this.numberEmployee = numberEmployee;
-        this.startDate = startDate;
-    }
-
 
     //Getter y Setter
 
@@ -62,8 +53,8 @@ public class Restaurant {
         return active;
     }
 
-    public Integer getNumberEmployee() {
-        return numberEmployee;
+    public Integer getNumberEmployees() {
+        return numberEmployees;
     }
 
     public void setId(Long id) {
@@ -78,8 +69,8 @@ public class Restaurant {
         this.averagePrice = averagePrice;
     }
 
-    public void setNumberEmployee(Integer numberEmployee) {
-        this.numberEmployee = numberEmployee;
+    public void setNumberEmployees(Integer numberEmployee) {
+        this.numberEmployees = numberEmployee;
     }
 
     public void setActive(Boolean active) {
@@ -90,12 +81,16 @@ public class Restaurant {
         this.startDate = startDate;
     }
 
-    public FootType getFootType() {
-        return footType;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    public void setFootType(FootType footType) {
-        this.footType = footType;
+    public FoodType getFoodType() {
+        return foodType;
+    }
+
+    public void setFoodType(FoodType foodType) {
+        this.foodType = foodType;
     }
 
     @Override
@@ -105,9 +100,9 @@ public class Restaurant {
                 ", name='" + name + '\'' +
                 ", averagePrice=" + averagePrice +
                 ", active=" + active +
-                ", numberEmployee=" + numberEmployee +
+                ", numberEmployee=" + numberEmployees +
                 ", startDate=" + startDate +
-                ", footType=" + footType +
+                ", footType=" + foodType +
                 '}';
     }
 }

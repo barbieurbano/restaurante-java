@@ -12,7 +12,58 @@
                 <i class="fa-solid fa-utensils text-primary me-2"></i>Formulario restaurante
             </h1>
 <!--            Formulario para crear o editar un restaurante-->
+<!--            El th action apunta a un metodo en el controlador de postMapping-->
+            <form th:action="@{/restaurants}" method="post" th:object="${restaurant}">
+                <input type="hidden" th:field="*{id}">
 
+                <div class="mb-3">
+                    <label for="name" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="Patricia" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="averagePrice" class="form-label">Precio medio $</label>
+                    <input type="number" class="form-control" id="averagePrice"
+                    th:field="*{averagePrice}" step="5" min="0" max="500">
+                </div>
+
+                <div class="mb-3">
+                    <label for="numberEmployee" class="form-label">Cantidad de empleados</label>
+                    <input type="number" class="form-control" id="numberEmployee"
+                           th:field="*{numberEmployee}" step="1" min="1" max="500">
+                </div>
+
+                <div class="mb-3">
+                    <label for="startDate" class="form-label">Fecha de inicio</label>
+                    <input type="date" class="form-control" id="startDate"
+                           th:field="*{startDate}">
+                </div>
+
+                <div class="mb-3">
+                    <label for="footType" class="form-label">Tipo de comida</label>>
+                    <select class="form-select" id="footType" th:field="*{footType}">
+                        <option value=""></option>
+                        <option
+                                th:each="footType : ${footTypes}"
+                                th:value="${footType}"
+                                th:text="${footType.label}">
+
+                        </option>
+                    </select>
+
+                </div>
+
+                <div class="mb-3 form-check form-switch">
+                    <input type="checkbok" class="form-check-input" id="active" role="switch" th:field="*{active}">
+                    <label class="form-check-label" for="active">Restaurante activo</label>
+
+                </div>
+
+                <button type="submit" class="btn btn-success">
+                    <i class="fa-solid fa-floppy-disk"></i>Guardar
+                </button>
+
+            </form>
         </main>
 
         <footer th:replace="~{layout/footer :: footer}"></footer>

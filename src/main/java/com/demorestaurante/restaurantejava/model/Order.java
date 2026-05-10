@@ -3,20 +3,35 @@ package com.demorestaurante.restaurantejava.model;
 import com.demorestaurante.restaurantejava.model.enums.OrderStatus;
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
+// CUIDADO: order es una palabra reservada en db
+// Por eso le cambiamos el nombre a la tabla
 @Table(name = "Pedidos")
 public class Order {
     //Atributos
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDate date;
+    private LocalDateTime date = LocalDateTime.now();
     private Double totalPrice;
     private Integer numPeople;
     private Integer tableNumber;
     private Double tip;
+    private Integer numProducts;
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
+    public Integer getNumProducts() {
+        return numProducts;
+    }
+
+    public void setNumProducts(Integer numProducts) {
+        this.numProducts = numProducts;
+    }
 
     //Enum
     @Enumerated(EnumType.STRING)
@@ -46,13 +61,10 @@ public class Order {
         this.id = id;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
 
     public Double getTotalPrice() {
         return totalPrice;
@@ -111,7 +123,9 @@ public class Order {
                 ", numPeople=" + numPeople +
                 ", tableNumber=" + tableNumber +
                 ", tip=" + tip +
+                ", numProducts=" + numProducts +
                 ", status=" + status +
+                ", restaurant=" + restaurant +
                 '}';
     }
 }

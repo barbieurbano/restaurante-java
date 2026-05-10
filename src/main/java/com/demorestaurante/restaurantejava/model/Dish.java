@@ -11,6 +11,8 @@ public class Dish {
     @Column(name = "id", nullable = false)
     private Long id;
     private String name;
+
+    @Column(length = 500) // porq por defecto es 255
     private String description;
     private Double price;
 

@@ -2,7 +2,7 @@ package com.demorestaurante.restaurantejava;
 
 import com.demorestaurante.restaurantejava.model.*;
 import com.demorestaurante.restaurantejava.model.enums.DishType;
-import com.demorestaurante.restaurantejava.model.enums.FootType;
+import com.demorestaurante.restaurantejava.model.enums.FoodType;
 import com.demorestaurante.restaurantejava.model.enums.OrderStatus;
 import com.demorestaurante.restaurantejava.repository.*;
 import org.springframework.boot.SpringApplication;
@@ -13,27 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+// Una clase con @Entity equivale a una tabla de base de datos
+// Un objeto equivale a una fila en una tabla de base de datos
+
 @SpringBootApplication
 public class RestauranteJavaApplication {
 
     public static void main(String[] args) {
-        //SpringApplication.run(RestauranteJavaApplication.class, args);
-        //var context = SpringApplication.run(RestaurantesJavaApplication.class, args);
-        //ReviewRepository reviewRepository = context.getBean(ReviewRepository.class);
-        //Crear cuatro reviews de un restaurante usando Builder de lombok, es un patron de disenio que permite crear objetos
-        //Los .of son con el metodo factory
-        //Review r1 = Review.builder()
-        //.description("Nefasto");
-        //.restaurant(restaurantSpain);
-        //.title("Me sirvieron la sopa sin mosca");
-        //.rating(1);
-        //.build();
-
-        //Review r
-
-        //reviewRepository.saveAll(List.of(review1, review2, review3));
-
-        var context = SpringApplication.run(RestauranteJavaApplication.class, args);
+       var context = SpringApplication.run(RestauranteJavaApplication.class, args);
 
         // obtener los repositorios para poder hacer operaciones de base de datos con ellos
         // Los repositorios nos dan las operaciones CRUD (findAll, findById, save, delete)
@@ -48,7 +35,7 @@ public class RestauranteJavaApplication {
         Restaurant nuevoRestaurante = new Restaurant(); // objeto
         nuevoRestaurante.setName("Paco Bar");
         nuevoRestaurante.setAveragePrice(20.33);
-        nuevoRestaurante.setNumberEmployee(5);
+        nuevoRestaurante.setNumberEmployees(5);
 
         // guardar el restaurante en base de datos usando el repositorio: .save()
         restaurantRepository.save(nuevoRestaurante);
@@ -163,16 +150,18 @@ public class RestauranteJavaApplication {
 
         // Crear un restaurante español
         Restaurant restaurantSpain = new Restaurant();
-        //restaurantSpain.setFoodType("Español");
         restaurantSpain.setName("La Taberna");
-        restaurantSpain.setFootType(FootType.SPANISH);
+        restaurantSpain.setAveragePrice(4d);
+        restaurantSpain.setFoodType(FoodType.SPANISH);
         restaurantRepository.save(restaurantSpain);
         System.out.println(restaurantSpain);
 
 
         // crear un restaurante de comida japonesa
         Restaurant restaurantJapan =  new Restaurant();
-        restaurantJapan.setFootType(FootType.JAPANESE);
+        restaurantJapan.setFoodType(FoodType.JAPANESE);
+        restaurantJapan.setAveragePrice(16d);
+        restaurantJapan.setName("Restaurante Japonés gyozas");
         restaurantRepository.save(restaurantJapan);
         System.out.println(restaurantJapan);
 
@@ -185,6 +174,7 @@ public class RestauranteJavaApplication {
         // Probar fecha de startDAte del restuarante
         Restaurant smashBurguer = new Restaurant();
         smashBurguer.setName("Smash Burguer Madrid");
+        smashBurguer.setAveragePrice(18d);
         smashBurguer.setStartDate(LocalDate.now()); // fecha actual
         restaurantRepository.save(smashBurguer);
         System.out.println(smashBurguer);
@@ -192,6 +182,7 @@ public class RestauranteJavaApplication {
         // fecha futura
         Restaurant sidreria = new Restaurant();
         sidreria.setName("Sidreria");
+        sidreria.setAveragePrice(9d);
         sidreria.setStartDate(LocalDate.of(2026, 6, 25));
         restaurantRepository.save(sidreria);
         System.out.println(sidreria);
@@ -204,17 +195,17 @@ public class RestauranteJavaApplication {
         // Paso 1. crear restaurante y guardarlo
         Restaurant dominosPizza = new Restaurant();
         dominosPizza.setName("DominosPizza");
-        dominosPizza.setFootType(FootType.SPANISH); // ponemos SPANISH para la prueba, aunque no lo sea
+        dominosPizza.setFoodType(FoodType.SPANISH); // ponemos SPANISH para la prueba, aunque no lo sea
         restaurantRepository.save(dominosPizza);
         // paso 2. crear empleados, setRestaurant y guardar
         Employee juanito = new Employee();
-        juanito.setFisrtName("Juanito");
+        juanito.setFirstName("Juanito");
         juanito.setRestaurant(dominosPizza);
         juanito.setAge(18); // NO cumple el filtro de findByAgeGreaterThanEqual
         employeeRepository.save(juanito);
         System.out.println(juanito); // imprime el id del restaurante en el toSTring
         Employee patricia = new Employee();
-        patricia.setFisrtName("Patricia");
+        patricia.setFirstName("Patricia");
         patricia.setRestaurant(dominosPizza);
         patricia.setAge(35); // SÍ cumple el filtro de findByAgeGreaterThanEqual
         employeeRepository.save(patricia);
@@ -229,9 +220,9 @@ public class RestauranteJavaApplication {
 //                    (trabajador.getRestaurant() != null ? trabajador.getRestaurant().getName() : "ningún sitio"));
 
             if (trabajador.getRestaurant() != null)  {
-                System.out.println(trabajador.getFisrtName() + " trabaja en " + trabajador.getRestaurant().getName());
+                System.out.println(trabajador.getFirstName() + " trabaja en " + trabajador.getRestaurant().getName());
             } else {
-                System.out.println(trabajador.getFisrtName() + " trabaja en ningún sitio");
+                System.out.println(trabajador.getFirstName() + " trabaja en ningún sitio");
             }
         }
         // probar a filtrar por nombre de restaurante
@@ -240,7 +231,7 @@ public class RestauranteJavaApplication {
         System.out.println(empleadosDominos);
 
         System.out.println("FILTRAR EMPLEADOS POR TIPO DE COMIDA DE RESTAURANTE:");
-        for (var e : employeeRepository.findByRestaurant_FoodType(FootType.SPANISH))
+        for (var e : employeeRepository.findByRestaurant_FoodType(FoodType.SPANISH))
             System.out.println(e);
 
         System.out.println("FILTRAR EMPLEADOS POR EDAD MAYOR O IGUAL QUE");
@@ -248,7 +239,7 @@ public class RestauranteJavaApplication {
             System.out.println(e);
 
         System.out.println("TRAER TODOS LOS EMPLEADOS ORDENADOS POR NOMBRE ASCENDENTE A-Z");
-        for (var e : employeeRepository.findByOrderFisrtNameAsc())
+        for (var e : employeeRepository.findByOrderByFirstNameAsc())
             System.out.println(e);
 
         String nombre = "Alan"; // string normal

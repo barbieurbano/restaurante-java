@@ -27,11 +27,11 @@ public class Employee {
         this.id = id;
     }
 
-    public String getFisrtName() {
+    public String getFirstName() {
         return firstName;
     }
 
-    public void setFisrtName(String fisrtName) {
+    public void setFirstName(String fisrtName) {
         this.firstName = fisrtName;
     }
 
@@ -77,14 +77,15 @@ public class Employee {
         this.dni = dni;
     }
 
+    // SI EL RESTAURANTE ES NULL ENTONCES HACE NULL.getId() Y DA ERROR NULL POINTER EXCEPTION
     @Override
     public String toString() {
         return "Employee{" +
                 "id=" + id +
-                ", fisrtName='" + firstName + '\'' +
+                ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", age=" + age +
                 ", dni='" + dni + '\'' +
-                '}';
+                ", restaurant=" + (restaurant != null ? restaurant.getId() : null) + '}';
     }
 }

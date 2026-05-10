@@ -3,16 +3,14 @@ package com.demorestaurante.restaurantejava.controller;
 import com.demorestaurante.restaurantejava.model.Dish;
 import com.demorestaurante.restaurantejava.model.Restaurant;
 import com.demorestaurante.restaurantejava.model.Review;
-import com.demorestaurante.restaurantejava.model.enums.FootType;
+import com.demorestaurante.restaurantejava.model.enums.FoodType;
 import com.demorestaurante.restaurantejava.repository.DishRepository;
 import com.demorestaurante.restaurantejava.repository.RestaurantRepository;
 import com.demorestaurante.restaurantejava.repository.ReviewRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +43,7 @@ public class RestaurantController {
     @GetMapping("restaurants") //Esta ruta se ve desde el navegador
     public String restaurantList(
             Model model,
-            @RequestParam(required = false)FootType foodType,
+            @RequestParam(required = false) FoodType foodType,
             @RequestParam(required = false)Double price,
             @RequestParam(required = false)String title
 
@@ -104,12 +102,33 @@ public class RestaurantController {
     //Ruta para entrar al formulario de restaurante
     @GetMapping("restaurant/new")
     public String newRestaurants(Model model){
+        //agregar objeto Restaurant vacio para rellenarlo desde el formulario
+        model.addAttribute("restaurant", new Restaurant());
+        model.addAttribute("footTypes", FoodType.values());
+        //Datos para el formulario, asociaciones  (qsi restaurante apunta a otras entity podemos sacar selectores para que seleccione)
+
         return "restaurants/restaurant-form";
+    }
+
+    @GetMapping("restaurants/edit/{id}")
+    public String editRestaurant(@PathVariable Long id, Model model){
+        model.addAttribute("restaurant", restaurantRepository.findById(id).orElseThrow());
+        model.addAttribute("footType", FoodType.values());
+        return "restaurants/restaurant-form";
+    }
+
+    @PostMapping("restaurants")
+    public String createRestaurant(@ModelAttribute Restaurant restaurant){
+        System.out.println("Restaurante recibido" + restaurant);
+        //Luego veremos los log personalizados
+        restaurantRepository.save(restaurant);
+        return "redirect:/restaurants/" + restaurant.getId();
     }
 
     @GetMapping("restaurant/{id}/edit")
     public String restauranEdit(){
         return "";
     }
+
 
 }
