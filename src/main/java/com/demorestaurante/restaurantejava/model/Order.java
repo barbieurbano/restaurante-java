@@ -21,6 +21,9 @@ public class Order {
     private Double tip;
     private Integer numProducts;
 
+    @Column(length = 500)
+    private String userSuggestions;
+
     public void setDate(LocalDateTime date) {
         this.date = date;
     }
@@ -114,6 +117,14 @@ public class Order {
         this.restaurant = restaurant;
     }
 
+    public String getUserSuggestions() {
+        return userSuggestions;
+    }
+
+    public void setUserSuggestions(String userSuggestions) {
+        this.userSuggestions = userSuggestions;
+    }
+
     @Override
     public String toString() {
         return "Order{" +
@@ -124,6 +135,7 @@ public class Order {
                 ", tableNumber=" + tableNumber +
                 ", tip=" + tip +
                 ", numProducts=" + numProducts +
+                ", userSuggestions='" + userSuggestions + '\'' +
                 ", status=" + status +
                 ", restaurant=" + restaurant +
                 '}';

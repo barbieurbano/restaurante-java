@@ -6,12 +6,8 @@ import com.demorestaurante.restaurantejava.repository.RestaurantRepository;
 import com.demorestaurante.restaurantejava.repository.ReviewRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
-import com.demorestaurante.restaurantejava.repository.DishRepository;
-import com.demorestaurante.restaurantejava.repository.RestaurantRepository;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -57,15 +53,34 @@ public String newReview (Model model,
         review.setRestaurant(restaurantRepository.findById(restaurantId).orElseThrow());
     }
     model.addAttribute("review",review);
-
+//En nuestro proyecto iria una MOVIE
     if(dishId != null)
         review.setDish(dishRepository.findById(dishId).orElseThrow());
     model.addAttribute("review", review);
     return "reviews/review-form";
 }
 
-//A FUTURO EL EDIT
-
+//A FUTURO EL EDIT, para reviews, edit, id
+@GetMapping("reviews/edit/{id}")
+public String editReview(@PathVariable Long id, Model model){
+    model.addAttribute("review", reviewRepository.findById(id).orElseThrow());
+    return "reviews/review-form";
+}
 
 //PostMapping reviews para save, redirect
+@PostMapping("reviews")
+public String saveReview(@ModelAttribute Review review){
+    reviewRepository.save(review);
+    //Hacia donde redirigimos, lo ideal seria que como la review te trae un restaurante que te rediriga a un restaurant epara que puedas ver las otras reviews
 
+    if(review.getRestaurant() != null)
+    {
+        return "redirect:/restaurants" + review.getRestaurant().getId();
+    }
+
+    if(review.getDish() != null){
+        return "redirect:/dishes/" + review.getDish().getId();
+    }
+
+    return "redirect:/reviews";
+}
