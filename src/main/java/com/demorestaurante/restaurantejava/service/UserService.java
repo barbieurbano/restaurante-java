@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -89,6 +90,57 @@ public class UserService implements UserDetailsService {
                 orderRepository.calculateTotalMoneySpentByUserId(id)
         );
     }
+
+    //necesitamos un create, creamos por primera vez, debemos ver que no este ocupado el nombre ni el email, luego ciframos la password y guardamos (tambien ver que el rol no este nullo, ni la password te la dejen vacia)
+    public User create(User user){
+        if(userRepository.existsByUsername(user.getUsername()))
+            throw new IllegalArgumentException("El nombre de usuario ya existe");
+        if(userRepository.existsByEmail(user.getEmail()))
+            throw new IllegalArgumentException("El correo electronico ya existe");
+        if(StringUtils.hasText(user.getPassword()))
+            throw new IllegalArgumentException("Password no puede estar vacia");
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
+    }
+
+
+    //Lo normal es que te pasen por parametro el ID
+    //Le ponemos userForm para diferenciar que viene del formulario, me lo envia el admin
+    public User update(User userForm){
+        //Primero obtenemos el usuario de la BD, porque estamos editando algo que ya eiste en la BD
+        //Sobre ese usuario es que queremos cambiar los cambios y guardarlo
+        User userDB = findById(userForm.getId());
+        //si username ocupado por otro usuario hacer un throw new illegalexception
+
+        //if(userDB.getId() != userForm.getId() && userRepository.existsByUsername());
+        Optional <User> userOpt = userRepository.findByUsername(userForm.getUsername());
+        if(userOpt.isPresent() && !userOpt.get().getId().equals(userDB.getId())){
+            throw new IllegalArgumentException("El nombre de usuario ya existe");
+        }
+        //En programacion funcional
+//        userRepository.findByUsername(userForm.getUsername())
+//                .filter(user -> !user.getId().equals(userForm.getId()))
+//                .ifPresent(user -> {throw new IllegalArgumentException("El nombre de usuario ya existe")});
+
+        userRepository.findByEmail(userForm.getEmail())
+                .filter(user -> !user.getId().equals(userForm.getId()))
+                .ifPresent(user -> {throw new IllegalArgumentException("El correo electronico ya existe");
+                });
+
+        userDB.setUsername(userForm.getUsername());
+        userDB.setEmail(userForm.getEmail());
+        userDB.setRole(userForm.getRole());
+        //TODO un admin podria desactivarse a si mismo, hay que impedirlo con un illegalArgument
+        userDB.setActive(userForm.getActive());
+
+        if(StringUtils.hasText(userForm.getPassword())){
+            userDB.setPassword(passwordEncoder.encode(userForm.getPassword()));
+        }
+
+        return userRepository.save(userDB);
+    }
+
+    //necesitamos un update
 
 }
 
