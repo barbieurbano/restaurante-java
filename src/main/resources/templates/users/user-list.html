@@ -10,6 +10,8 @@
         <i class="fa-solid fa-user-plus"></i>
         Crear usuario
     </a>
+<!--    Para esto sirve el flash atributee hemos cambiado de pantalla y que mantenga el mensaje-->
+    <div th:if="${message}" class="alert alert-success mt-3" th:text="${message}"></div>
 
     <div class="table-responsive mt-3">
         <table class="table table-hover align-middle table-bordered border-success">
@@ -19,6 +21,7 @@
                 <th>Username</th>
                 <th>Email</th>
                 <th>Rol</th>
+                <th>Activo</th>
                 <th>Acciones</th>
             </tr>
             </thead>
@@ -29,6 +32,10 @@
                 <td th:text="${user.username}"></td>
                 <td th:text="${user.email}"></td>
                 <td th:text="${user.role}"></td>
+                <td>
+                    <span class="bagde text-bg-success" th:if="${user.active}">Si</span>
+                    <span class="bagde text-bg-danger" th:unless="${user.active}">No</span>
+                </td>
                 <td>
                     <a th:href="@{/admin/users/{id}(id=${user.id})}"
                        class="btn btn-sm btn-outline-primary">

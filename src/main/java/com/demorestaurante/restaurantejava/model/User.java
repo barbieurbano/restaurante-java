@@ -39,12 +39,19 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Role role;
 
+    private Boolean active;// como puede ser null le hacemos el override para que devuelva lo que tenga (true o false)
+
     //Es el unico que dejamos. Por los roles, devuelve una coleccion de roles. Nosotros le decimos que nos de 1 solamente.
     //Devuelve los metodos de role.
     //Entender si un usuario tiene permisos o no.. Cuando quieras acceder a la URL directo igualmente comprueba si tiene permisos.
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+    //spring security llama a este metodo, si active es false no le deja hacer LOGIN, INICIAR SESSION
+    @Override
+    public boolean isEnabled(){
+        return active != null && active;
     }
 
 }
