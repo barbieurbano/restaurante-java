@@ -2,9 +2,12 @@ package com.demorestaurante.restaurantejava.repository;
 
 import com.demorestaurante.restaurantejava.model.Favorite;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
@@ -16,5 +19,14 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
     Optional<Favorite> findByUser_IdAndDishId(Long userId, Long dishId);
 
-    //Falta query para ids y poder traer el corazon.
+    //Falta query para ids y sacar una lista para compara y poder traer el corazon.
+    //Verificar si un restaurante ya es favrito y asi decidir mostrarlo diferente en la UI
+    @Query ("""
+    Select f.restaurant.id from Favorite  f
+        where f.user.id = :userId and f.restaurant IS NOT NULL
+            
+         
+    """)
+    //Es un conjunto, una lsita pero sin duplicados.
+    Set<Long> findRestaurantIdsByUserId(@Param("userId") Long userId);
 }
