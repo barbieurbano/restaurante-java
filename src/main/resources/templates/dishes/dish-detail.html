@@ -1,45 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Detalle plato</title>
-</head>
-<body>
-<h1 th:text="'Plato' + ${dish.id}"></h1>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<p th:text="'Nombre: ' + ${dish.name}"></p>
+<head th:replace="~{layout/head :: head('Detalle Plato')}"></head>
+<body class="d-flex flex-column min-vh-100">
 
-<p th:text="'Precio: ' + ${dish.price != null ? dish.price + '(EUR)' : 'Sin precio'}"></p>
+<nav th:replace="~{layout/navbar :: navbar}"></nav>
 
-<p th:text="'Descripcion: ' + ${dish.description != null ? dish.description : 'Sin descripcion'}"></p>
+<main class="container flex-grow-1">
 
-<!-- SWICH sobre enum tipo de plato DishType-->
-<p th:switch="${dish.dishType}">
-    <span th:case="${T(com.demorestaurante.restaurantejava.model.enums.DishType.STARTER)}">Entrantes</span>
-    <span th:case="${T(com.demorestaurante.restaurantejava.model.enums.DishType.MAIN)}">Principales</span>
-    <span th:case="${T(com.demorestaurante.restaurantejava.model.enums.DishType.DESSERT)}">Postres</span>
-    <span th:case="*">No definido.</span>
-</p>
-<p th:if="${dish.restaurant != null}">
-    <!--Desde aqui se puede volver a la pantalla del restaurante-->
-    <a th:href="@{/restaurants/{id}(id=${dish.restaurant.id})}" th:text="${dish.restaurant.name}"></a>
-</p>
+    <!-- Card con los datos del plato -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h1 class="card-title mb-3" th:text="'Plato ' + ${dish.id}">Plato</h1>
 
-<a class="btn btn-success my-3" th:href="@{/reviews/new(dishId=${dish.id})}">
-    <i class="fa-solid fa-plus"></i>Escribir review
-</a>
+            <dl class="row mb-0">
+                <dt class="col-sm-3"><i class="fa-solid fa-tag me-1"></i> Nombre</dt>
+                <dd class="col-sm-9" th:text="${dish.name}"></dd>
 
-<h2>Opiniones sobre este plato</h2>
-<p th:if="${reviews.isEmpty()}">Nadie ha comentado todavia, se el primero en escribir una opinion</p>
+                <dt class="col-sm-3"><i class="fa-solid fa-euro-sign me-1"></i> Precio</dt>
+                <dd class="col-sm-9" th:text="${dish.price != null ? dish.price + ' €' : 'Sin precio'}"></dd>
 
-<ul th:unless="${reviews.isEmpty()}">
-    <li th:each="review : ${reviews}">
-        <p th:text="${review.title}"></p>
-        <p th:text="${review.description}"></p>
-        <p th:text="${'Valoracion: ' + review.rating + '/5 estrellas'}"></p>
-        <p th:text="${'Fecha: ' + review.creationDate}"></p>
-    </li>
-</ul>
+                <dt class="col-sm-3"><i class="fa-regular fa-pen-to-square me-1"></i> Descripción</dt>
+                <dd class="col-sm-9" th:text="${dish.description != null ? dish.description : 'Sin descripción'}"></dd>
+
+                <dt class="col-sm-3"><i class="fa-solid fa-list me-1"></i> Tipo</dt>
+                <dd class="col-sm-9">
+                    <span th:switch="${dish.dishType}">
+                        <span class="badge bg-success" th:case="${T(com.restaurantes.model.enums.DishType).STARTER}">🥬 Entrantes de la tierrina</span>
+                        <span class="badge bg-primary" th:case="${T(com.restaurantes.model.enums.DishType).MAIN}">🐟 Principales</span>
+                        <span class="badge bg-warning text-dark" th:case="${T(com.restaurantes.model.enums.DishType).DESSERT}">🍦 Postres</span>
+                        <span class="badge bg-secondary" th:case="*">No definido</span>
+                    </span>
+                </dd>
+            </dl>
+        </div>
+
+        <div class="card-footer bg-transparent" th:if="${dish.restaurant != null}">
+            <i class="fa-solid fa-store text-primary me-1"></i>
+            Este plato pertenece al restaurante
+            <a class="fw-semibold"
+               th:href="@{/restaurants/{id}(id=${dish.restaurant.id})}"
+               th:text="${dish.restaurant.name}"></a>
+        </div>
+    </div>
+
+    <!-- Opiniones del plato -->
+    <h2 class="mt-5">
+        <i class="fa-regular fa-comments text-primary me-2"></i> Opiniones sobre este plato
+    </h2>
+
+    <a class="btn btn-success my-3" sec:authorize="isAuthenticated()"
+       th:href="@{/reviews/new(dishId=${dish.id})}">
+        <i class="fa-solid fa-plus"></i> Escribir reseña
+    </a>
+
+    <div th:if="${reviews.isEmpty()}" class="alert alert-light border">
+        <i class="fa-regular fa-face-smile me-1"></i>
+        Nadie ha comentado todavía, sé el primero en escribir una opinión.
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 g-3" th:unless="${reviews.isEmpty()}">
+        <div class="col" th:each="review : ${reviews}">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${review.title}">Título</h5>
+                    <p class="card-text" th:text="${review.description}">Descripción</p>
+                    <span class="badge bg-warning text-dark">
+                        <i class="fa-solid fa-star me-1"></i>
+                        <span th:text="${review.rating + ' / 5'}"></span>
+                    </span>
+                </div>
+                <div class="card-footer text-muted small bg-transparent">
+                    <i class="fa-regular fa-calendar me-1"></i>
+                    <span th:text="${review.creationDate}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<footer th:replace="~{layout/footer :: footer}"></footer>
+<script th:replace="~{layout/footer :: scripts}"></script>
 
 </body>
 </html>
