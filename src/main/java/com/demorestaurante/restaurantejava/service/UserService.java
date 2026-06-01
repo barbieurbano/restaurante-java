@@ -26,6 +26,7 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final ReviewRepository reviewRepository;
     private final OrderRepository orderRepository; //Para calcular cuantas review ha hecho y cuantos pedidos ha hecho
+    private final FavoriteService favoriteService;
 
     //meto para buscar el usuario BD por su username
     @Override
@@ -81,13 +82,16 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
     }
 
+    //Agregamos los favoritos asi los podemos mostrar por pantalla
     public UserStatsDTO findStatsById(Long id){
         return new UserStatsDTO(
                 reviewRepository.countByUser_Id(id),
                 reviewRepository.findByUser_Id(id),
                 orderRepository.countByUser_Id(id),
                 orderRepository.findByUser_IdOrderByDateDesc(id),
-                orderRepository.calculateTotalMoneySpentByUserId(id)
+                orderRepository.calculateTotalMoneySpentByUserId(id),
+                favoriteService.findFavoriteRestaurants(id),
+                favoriteService.findFavoriteDishes(id)
         );
     }
 
