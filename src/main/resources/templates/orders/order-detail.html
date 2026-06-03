@@ -149,18 +149,25 @@
                     </h5>
                 </div>
                 <div class="card-body text-center pb-2">
-                    <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-2"
+                    <div th:unless="${order.user.imageUrl}" class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-2"
                          style="width: 64px; height: 64px;">
                         <i class="fa-solid fa-user fa-2x text-primary"></i>
                     </div>
-                    <h5 class="card-title mb-0">María García</h5>
+                    <div th:if="${order.user.imageUrl}" class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-2"
+                         style="width: 64px; height: 64px;">
+                        <img th:if="${user.imageUrl != null}" th:src="${user.imageUrl}"
+                             class="rounded-circle object-fit-cover"
+                             width="150" height="150" alt="Foto perfil">
+                    </div>
+
+                    <h5 class="card-title mb-0" th:text="${order.user.username}"></h5>
                     <p class="text-muted small mb-0">
                         <i class="fa-solid fa-crown text-warning me-1"></i>Cliente VIP
                     </p>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item d-flex justify-content-between">
-                        <span class="text-muted"><i class="fa-solid fa-envelope me-2"></i>Email</span>
+                        <span class="text-muted"><i class="fa-solid fa-envelope me-2" th:text="${order.user.email}"></i></span>
                         <span class="fw-semibold small">maria@example.com</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between">
@@ -169,8 +176,15 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between">
                         <span class="text-muted"><i class="fa-solid fa-receipt me-2"></i>Pedidos</span>
-                        <span class="fw-semibold">12</span>
+                        <span class="fw-semibold" th:text="${countUserOrders}"></span>
                     </li>
+
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span class="text-muted"><i class="fa-solid fa-receipt me-2"></i>Dinero gastado</span>
+                        <span class="fw-semibold" th:text="${totalMoneyUserSpent}"></span>
+                    </li>
+
+
                 </ul>
             </div>
         </div>
@@ -202,6 +216,8 @@
                     <th class="text-end">Precio</th>
                     <th class="text-end">Subtotal</th>
                     <th class="text-end pe-3"></th>
+                    <th class="text-end pe-3" th:if="${order.status.name() != 'FINISHED'}">Modificar</th>
+                    <th class="text-end pe-3" th:if="${order.status.name() != 'FINISHED'}">Eliminar</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -236,6 +252,26 @@
                             <i class="fa-regular fa-eye"></i>
                         </a>
                     </td>
+<!--                    Aqui vamos hacer el form-->
+                    <td th:if="${order.status.name() == 'FINISHED'}">
+                        <form th:action="@{/orders/{orderId}/lines/{lineId}/(orderId=${order.id},lineId=${line.id})}"
+                              method="post" class="d-flex align-items-center">
+                            <input name="quantity" type="number" min="1" style="max-width: 90px" th:value="${line.quantity}" class="form-control form-control-sm">
+                            <button class="btn btn-sm btn-success">
+                                <i class="fa-solid fa-up-down"></i>
+                            </button>
+
+                        </form>
+                    </td>
+
+                    <td th:if="${order.status.name() == 'FINISHED'}">
+                        <a class=”btn btn-sm btn-danger”
+                           th:href="@{/orders/{orderId}/lines/{lineId}/delete(orderId=${order.id},lineId=${line.id})}">
+                            <i class=”fa-solid fa-trash”></i>
+                        </a>
+                    </td>
+
+
                 </tr>
                 </tbody>
             </table>
@@ -254,9 +290,26 @@
                         <dd class="col-5 text-end fs-5 fw-bold text-success mb-0">
                             <span th:text="${#numbers.formatDecimal(order.totalPrice, 1, 2)}"></span> €
                         </dd>
+
+                        <dt>Finalizar</dt>
+                        <dd>
+
+                        </dd>
                     </dl>
                 </div>
             </div>
+
+            <div class="card shadow-sm border-0 mb-4" th:if="${order.status.name() != 'FINISHED'}">
+                <div class="card-body">
+                    <h5>Seccion de pago</h5>
+                    <form th:action="@{/orders/{id}/finish(id=${order.id})}" method="get" class="d-flex align-items-center">
+                        <label class="form-label" for="tip"> Propina</label>
+                        <input type="number" id="tip" min="0" name="tip" class="form-control" value="0.00" step="0.01">
+                        <button type="submit" class="btn btn-sm btn-success">Pagar y finalizar</button>
+                    </form>
+                </div>
+            </div>
+
         </div>
     </div>
 <!--    Mostrar los platos a elegir para el pedido en progreso, sera como un miniformulario por cada plato-->
